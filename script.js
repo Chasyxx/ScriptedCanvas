@@ -18,6 +18,7 @@ globalThis.RUN = new class {
 
     async runScript() {
         this.button.title = ""
+        this.button.disabled = true
         const X = this.canvas.width/2//this.inputs.x.value
         const Y = 256//this.inputs.y.value
         const colored = this.inputs.c.checked
@@ -66,7 +67,7 @@ globalThis.RUN = new class {
                             V=[getVal(V[0]),getVal(V[1])]
                             const N1 = isNaN(V[0]) ? 100 : 0;
                             const N2 = isNaN(V[1]) ? 100 : 0;
-                            color = `rgb(${N2|N1?N2|N1:V[1]&255},${N1?N1:V[0]&255},${N2?0:V[1]&255})`
+                            color = `rgb(${N2|N1},${N1?N1:V[0]&255},${N2?0:V[1]&255})`
                         } else if (Array.isArray(V)&&colored) {
                             V = getVal(V[0])
                             const N = isNaN(V) ? 100 : 0;
@@ -88,6 +89,7 @@ globalThis.RUN = new class {
                 this.button.innerText = "Generate Another"
             } catch (err) { this.button.innerText = err.message; this.button.title = err.stack }
         }
+        this.button.disabled=false
     }
 }
 
