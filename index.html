@@ -16,14 +16,6 @@
             width: 600px;
             height: 128px ;
         }
-        @media (max-width: 1056px) {
-            canvas {
-                border: none;
-                background-color: black;
-                width: 512px;
-                height: 512px;
-            }            
-        }
     </style>
     <script src="script.js" type="module"></script>
 </head>
@@ -34,6 +26,7 @@
     <!--input id="dimX" type="number" title="X Resolution" value="64">
     <input id="dimY" type="number" title="Y Resolution" value="64"-->
     <input id="scal" type="number" title="Scale" value="1">
+    <input id="zoom" type="number" title="Zoom" value="1">
     <input id="colored" type="checkbox" title="Color graph?">
     <input id="slow" type="checkbox" title="Slowly print? (If your edge is stuck in efficincy mode you'll LOVE turning this off!)" checked>
     <select id="mode">

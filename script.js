@@ -8,6 +8,7 @@ globalThis.RUN = new class {
             x: document.getElementById('dimX'),
             y: document.getElementById('dimY'),
             s: document.getElementById('scal'),
+            z: document.getElementById('zoom'),
             c: document.getElementById('colored'),
             m: document.getElementById('mode'),
             slow: document.getElementById('slow'),
@@ -16,13 +17,12 @@ globalThis.RUN = new class {
     }
 
     async runScript() {
-        const smol = window.innerWidth < 1056
         this.button.title = ""
-        const X = smol ? 256 : 512//this.inputs.x.value
+        const X = this.canvas.width/2//this.inputs.x.value
         const Y = 256//this.inputs.y.value
         const colored = this.inputs.c.checked
         const slow = this.inputs.slow.checked
-        const SCALE = this.inputs.s.value
+        const ZOOM = this.inputs.z.value
         let func = null;
         let getVal = null;
         let done = false;
@@ -54,7 +54,7 @@ globalThis.RUN = new class {
                 for (let xP = 0; xP < X; xP++) {
                     for (let yP = 0; yP < Y; yP++) {
                         const y = Math.floor(yP / Y * 256)
-                        const x = Math.floor(xP / X * (smol ? 256 : 512) * SCALE)
+                        const x = Math.floor(xP / X * X / ZOOM)
                         const t = (x << 8) + y
 
                         let V = func(t, x, y); // Value // NaN
@@ -101,5 +101,15 @@ if(hash){
         RUN.inputs.m.value = data.mode
     } catch (error) {
         console.error(`CODELOADERROR: ${error.message}`)
+    }
+}
+
+window.onresize = RUN.inputs.s.onchange = () => {
+    const WIDE = window.innerWidth
+    console.log(String(WIDE) + String(WIDE < 1056))
+    if (WIDE < 1056){
+        RUN.canvas.width = 512*RUN.inputs.s.value;
+    } else {
+        RUN.canvas.width = 1024*RUN.inputs.s.value;
     }
 }
