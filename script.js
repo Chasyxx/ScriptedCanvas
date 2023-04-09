@@ -49,7 +49,7 @@ globalThis.RUN = new class {
             this.button.title = err.stack
         }
         if (done) {
-            window.location.hash = encodeURIComponent(btoa(this.inputs.fV.value))
+            window.location.hash = encodeURIComponent(btoa(JSON.stringify({code: this.inputs.fV.value, mode:this.inputs.m.value})))
             try {
                 for (let xP = 0; xP < X; xP++) {
                     for (let yP = 0; yP < Y; yP++) {
@@ -81,7 +81,10 @@ let hash = window.location.hash
 
 if(hash){
     try {
-        RUN.inputs.fV.value=atob(decodeURIComponent(hash.slice(1)))
+        const data = JSON.parse(atob(decodeURIComponent(hash.slice(1))))
+        console.log(data)
+        RUN.inputs.fV.value = data.code
+        RUN.inputs.m.value = data.mode
     } catch (error) {
         console.error(`CODELOADERROR: ${error.message}`)
     }
