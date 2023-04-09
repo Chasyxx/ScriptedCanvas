@@ -57,11 +57,25 @@ globalThis.RUN = new class {
                         const x = Math.floor(xP / X * (smol ? 256 : 512) * SCALE)
                         const t = (x << 8) + y
 
-                        const V = Number(getVal(func(t, x, y))); // Value
-                        const N = isNaN(V) ? 100 : 0; // NaN
+                        let V = func(t, x, y); // Value // NaN
 
                         // Convert brightness to grayscale color
-                        const color = `rgb(${N ? 100 : (!colored ? V & 255 : V >> 16 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 0 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 8 & 255)})`;
+                        let color
+                        
+                        if (Array.isArray(V)&&!colored) {
+                            V=[getVal(V[0]),getVal(V[1])]
+                            const N1 = isNaN(V[0]) ? 100 : 0;
+                            const N2 = isNaN(V[1]) ? 100 : 0;
+                            color = `rgb(${N2|N1?N2|N1:V[1]&255},${N1?N1:V[0]&255},${N2?0:V[1]&255})`
+                        } else if (Array.isArray(V)&&colored) {
+                            V = getVal(V[0])
+                            const N = isNaN(V) ? 100 : 0;
+                            color = `rgb(${N ? 100 : (!colored ? V & 255 : V >> 16 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 0 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 8 & 255)})`;
+                        } else {
+                            V=getVal(V)
+                            const N = isNaN(V) ? 100 : 0;
+                            color = `rgb(${N ? 100 : (!colored ? V & 255 : V >> 16 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 0 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 8 & 255)})`;
+                        }
                         // Draw pixel on the canvas
                         this.ctx.fillStyle = color;
                         this.ctx.fillRect(xP * Math.ceil(this.canvas.width / X), yP * Math.ceil(this.canvas.height / Y), Math.ceil(this.canvas.width / X), Math.ceil(this.canvas.height / Y));
