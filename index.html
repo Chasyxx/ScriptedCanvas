@@ -34,8 +34,15 @@
     <!--input id="dimX" type="number" title="X Resolution" value="64">
     <input id="dimY" type="number" title="Y Resolution" value="64"-->
     <input id="scal" type="number" title="Scale" value="1">
-    <input id="colored" type="checkbox" title="Color graph?"><input id="slow" type="checkbox" title="Slowly print? (If your edge is stuck in efficincy mode you'll LOVE turning this off!)" checked><br>
-    <textarea id="functionV" title="Function V"></textarea>
+    <input id="colored" type="checkbox" title="Color graph?">
+    <input id="slow" type="checkbox" title="Slowly print? (If your edge is stuck in efficincy mode you'll LOVE turning this off!)" checked>
+    <select id="mode">
+        <option value="N">Bytebeat</option>
+        <option value="S">Signed</option>
+        <option value="F">Floatbeat</option>
+    </select>
+    <br>
+    <textarea id="functionV" spellcheck="false" title="Function V"></textarea>
 </body>
 
 </html><!---->

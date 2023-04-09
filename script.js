@@ -9,6 +9,7 @@ globalThis.RUN = new class {
             y: document.getElementById('dimY'),
             s: document.getElementById('scal'),
             c: document.getElementById('colored'),
+            m: document.getElementById('mode'),
             slow: document.getElementById('slow'),
             fV: document.getElementById('functionV')
         }
@@ -22,9 +23,16 @@ globalThis.RUN = new class {
         const colored = this.inputs.c.checked
         const slow = this.inputs.slow.checked
         const SCALE = this.inputs.s.value
-        const check = (x = 0) => (isNaN(x) || (typeof x != 'number'))
         let func = null;
+        let getVal = null;
         let done = false;
+        switch (this.inputs.m.value) {
+            case 'N': getVal = (x)=>(x); break;
+            case 'S': getVal = (x)=>(x+128); break;
+            case 'F': getVal = (x)=>(Math.max(-1,Math.min(1,x)))*127.5+128; break;
+
+            default: getVal = (x)=>(NaN); break;
+        }
         // Easy math functions
         const params = Object.getOwnPropertyNames(Math);
         const values = params.map(k => Math[k]);
@@ -41,6 +49,7 @@ globalThis.RUN = new class {
             this.button.title = err.stack
         }
         if (done) {
+            window.location.hash = encodeURIComponent(btoa(this.inputs.fV.value))
             try {
                 for (let xP = 0; xP < X; xP++) {
                     for (let yP = 0; yP < Y; yP++) {
@@ -48,8 +57,8 @@ globalThis.RUN = new class {
                         const x = Math.floor(xP / X * (smol ? 256 : 512) * SCALE)
                         const t = (x << 8) + y
 
-                        const V = func(t, x, y); // Value
-                        const N = check(V) ? 100 : 0; // NaN
+                        const V = Number(getVal(func(t, x, y))); // Value
+                        const N = isNaN(V) ? 100 : 0; // NaN
 
                         // Convert brightness to grayscale color
                         const color = `rgb(${N ? 100 : (!colored ? V & 255 : V >> 16 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 0 & 255)}, ${N ? 0 : (!colored ? V & 255 : V >> 8 & 255)})`;
@@ -65,5 +74,15 @@ globalThis.RUN = new class {
                 this.button.innerText = "Generate Another"
             } catch (err) { this.button.innerText = err.message; this.button.title = err.stack }
         }
+    }
+}
+
+let hash = window.location.hash
+
+if(hash){
+    try {
+        RUN.inputs.fV.value=atob(decodeURIComponent(hash.slice(1)))
+    } catch (error) {
+        console.error(`CODELOADERROR: ${error.message}`)
     }
 }
