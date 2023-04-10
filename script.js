@@ -19,7 +19,7 @@ globalThis.RUN = new class {
     async runScript() {
         this.button.title = ""
         this.button.disabled = true
-        const X = this.canvas.width/2//this.inputs.x.value
+        const X = this.canvas.width//this.inputs.x.value
         const Y = 256//this.inputs.y.value
         const colored = this.inputs.c.checked
         const slow = this.inputs.slow.checked
@@ -54,8 +54,8 @@ globalThis.RUN = new class {
             try {
                 for (let xP = 0; xP < X; xP++) {
                     for (let yP = 0; yP < Y; yP++) {
-                        const y = Math.floor(yP / Y * 256)
-                        const x = Math.floor(xP / X * X / ZOOM)
+                        const y = yP
+                        const x = Math.floor(xP/ZOOM)
                         const t = (x << 8) + y
 
                         let V = func(t, x, y); // Value // NaN
@@ -79,11 +79,15 @@ globalThis.RUN = new class {
                         }
                         // Draw pixel on the canvas
                         this.ctx.fillStyle = color;
-                        this.ctx.fillRect(xP * Math.ceil(this.canvas.width / X), yP * Math.ceil(this.canvas.height / Y), Math.ceil(this.canvas.width / X), Math.ceil(this.canvas.height / Y));
+                        this.ctx.fillRect(xP, yP, 1, 1);
+                        this.ctx.clearRect(xP+4,0,4,Y)
                     }
                     if (slow) {
                         this.button.innerText = (xP + "/" + X)
                         await new Promise(resolve => { setTimeout(resolve, 2) })
+                        if(X>window.innerWidth){
+                            window.scrollTo(xP-window.innerWidth/2,0)
+                        }
                     }
                 }
                 this.button.innerText = "Generate Another"
@@ -108,10 +112,9 @@ if(hash){
 
 window.onresize = RUN.inputs.s.onchange = () => {
     const WIDE = window.innerWidth
-    console.log(String(WIDE) + String(WIDE < 1056))
-    if (WIDE < 1056){
-        RUN.canvas.width = 512*RUN.inputs.s.value;
+    if (WIDE < 544){
+        RUN.canvas.width = 256*RUN.inputs.s.value;
     } else {
-        RUN.canvas.width = 1024*RUN.inputs.s.value;
+        RUN.canvas.width = 512*RUN.inputs.s.value;
     }
 }

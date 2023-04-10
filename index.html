@@ -4,24 +4,29 @@
 <head>
     <title>Scripted Canvas</title>
     <style>
+        body {
+            margin-left:8px;
+            padding:0
+        }
         canvas {
             border: none;
             background-color: black;
+            margin-right: 8px;
         }
         input {
             width: 64px;
             height: 16px;
         }
         textarea {
-            width: 600px;
-            height: 128px ;
+            width: 512px;
+            height: 128px;
         }
     </style>
     <script src="script.js" type="module"></script>
 </head>
 
 <body>
-    <canvas id="canvas" width="1024" height="512"></canvas><br>
+    <canvas id="canvas" width="512" height="256"></canvas><br>
     <button id="Generate-button" onclick="RUN.runScript()">Generate</button>
     <!--input id="dimX" type="number" title="X Resolution" value="64">
     <input id="dimY" type="number" title="Y Resolution" value="64"-->
